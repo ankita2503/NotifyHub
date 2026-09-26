@@ -1,6 +1,9 @@
 package com.portfolio.notifyhub.domain;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
 import java.time.Instant;
 import java.util.UUID;
 
@@ -9,7 +12,7 @@ import java.util.UUID;
 public class NotificationRequest {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @Column(name = "idempotency_key", nullable = false, unique = true, length = 255)
@@ -31,7 +34,8 @@ public class NotificationRequest {
     @Column(name = "template_id", nullable = false, length = 64)
     private String templateId;
 
-    @Column(name = "payload", columnDefinition = "jsonb")
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "payload")
     private String payload;
 
     @Enumerated(EnumType.STRING)
@@ -59,7 +63,7 @@ public class NotificationRequest {
             Status status,
             Instant scheduledAt
     ) {
-        this.id = UUID.randomUUID();
+
         this.idempotencyKey = idempotencyKey;
         this.requestHash = requestHash;
         this.userId = userId;
@@ -72,5 +76,37 @@ public class NotificationRequest {
         this.createdAt = Instant.now();
     }
 
-    // getters only
+    public UUID getId() {
+        return id;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public String getChannels() {
+        return channels;
+    }
+
+    public String getTemplateId() {
+        return templateId;
+    }
+
+    public String getPayload() {
+        return payload;
+    }
+
+    public Instant getScheduledAt() {
+        return scheduledAt;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
 }
+
+// getters only
