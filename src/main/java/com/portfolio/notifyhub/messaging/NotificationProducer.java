@@ -4,6 +4,8 @@ import com.portfolio.notifyhub.config.KafkaTopicConfig;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.CompletableFuture;
+
 @Component
 public class NotificationProducer {
 
@@ -14,12 +16,12 @@ public class NotificationProducer {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    public void publish(NotificationRequestedEvent event) {
+    public CompletableFuture<Void> publish(NotificationRequestedEvent event) {
 
-        kafkaTemplate.send(
+        return kafkaTemplate.send(
                 KafkaTopicConfig.NOTIFICATIONS_REQUESTED,
                 event.userId(),     // Kafka message key
                 event
-        );
+        ).thenApply(result -> null);
     }
 }

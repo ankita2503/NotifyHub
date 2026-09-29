@@ -76,6 +76,10 @@ public class NotificationRequest {
         this.createdAt = Instant.now();
     }
 
+    public String getRequestHash() {
+        return requestHash;
+    }
+
     public UUID getId() {
         return id;
     }
